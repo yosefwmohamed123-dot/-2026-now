@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+خخخخ<!DOCTYPE html>
 
 <html dir="rtl" lang="ar"><head>
 <meta charset="utf-8"/>
@@ -1408,3 +1408,353 @@
         document.getElementById('newsDesc').value = '';
     }
 </script>
+
+        /* قسم لعبة الأسئلة العشر عن الهلال */
+        .quiz-section {
+            margin-bottom: 55px;
+        }
+
+        .quiz-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px 25px;
+            box-shadow: 0 16px 38px rgba(0, 0, 0, 0.35);
+            border-top: 6px solid var(--accent);
+            backdrop-filter: blur(10px);
+        }
+
+        .quiz-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid #edf2f7;
+        }
+
+        .quiz-progress-badge {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.95rem;
+        }
+
+        .quiz-score-badge {
+            background: #fefcbf;
+            color: #975a16;
+            border: 1px solid #f6e05e;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.95rem;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 10%;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            transition: width 0.35s ease;
+        }
+
+        .quiz-question {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--dark);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-option-btn {
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            color: var(--dark);
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 800;
+            text-align: right;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .quiz-option-btn:hover:not(:disabled) {
+            background: #ebf8ff;
+            border-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .quiz-option-btn:disabled {
+            cursor: default;
+        }
+
+        .quiz-option-btn.correct {
+            background: #dcfce7 !important;
+            border-color: #16a34a !important;
+            color: #14532d !important;
+        }
+
+        .quiz-option-btn.wrong {
+            background: #fee2e2 !important;
+            border-color: #dc2626 !important;
+            color: #7f1d1d !important;
+        }
+
+        .quiz-feedback {
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.is-correct {
+            background: #dcfce7;
+            color: #14532d;
+            border: 1.5px solid #22c55e;
+        }
+
+        .quiz-feedback.is-wrong {
+            background: #fee2e2;
+            color: #7f1d1d;
+            border: 1.5px solid #ef4444;
+        }
+
+        .quiz-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .quiz-result-box {
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        .quiz-result-score {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+                <!-- قسم لعبة الـ 10 أسئلة عن الهلال -->
+        <section class="quiz-section" id="quiz-section">
+            <div class="section-header">
+                <h2 class="section-title">🎮 لعبة الـ 10 أسئلة: اختبر معلوماتك عن الهلال</h2>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-top-bar">
+                    <span class="quiz-progress-badge" id="quiz-counter">السؤال 1 من 10</span>
+                    <span class="quiz-score-badge" id="quiz-score">النتيجة: 0 / 10</span>
+                </div>
+
+                <div class="progress-track">
+                    <div class="progress-fill" id="quiz-progress-bar"></div>
+                </div>
+
+                <div id="quiz-play-area">
+                    <div class="quiz-question" id="quiz-question-text">جاري تحميل السؤال...</div>
+                    <div class="quiz-options" id="quiz-options-box"></div>
+                    <div class="quiz-feedback" id="quiz-feedback-box"></div>
+                    <div class="quiz-actions">
+                        <button class="btn" id="next-question-btn" onclick="nextQuestion()" style="display: none;">السؤال التالي ⬅️</button>
+                    </div>
+                </div>
+
+                <div class="quiz-result-box" id="quiz-result-box" style="display: none;">
+                    <h3>🎉 انتهت اللعبة!</h3>
+                    <div class="quiz-result-score" id="final-score-text">0 / 10</div>
+                    <p id="final-rank-msg" style="margin-bottom: 20px; color: #4a5568; font-weight: 700;"></p>
+                    <button class="btn" onclick="restartQuiz()">🔄 لعب مرة أخرى</button>
+                </div>
+            </div>
+        </section>
+
+                // لعبة الـ 10 أسئلة عن نادي الهلال السعودي
+        const hilalQuestions = [
+            {
+                question: "1. في أي مدينة سعودية يقع مقر نادي الهلال السعودي؟",
+                options: ["جدة", "الرياض", "الدمام", "مكة المكرمة"],
+                answer: 1,
+                explanation: "يقع نادي الهلال السعودي في العاصمة الرياض."
+            },
+            {
+                question: "2. ما هو اللقب الأشهر لنادي الهلال السعودي؟",
+                options: ["العميد", "الزعيم", "الليث", "الراقي"],
+                answer: 1,
+                explanation: "يُلقب الهلال بـ (الزعيم) نظراً لكثرة بطولاته وإنجازاته."
+            },
+            {
+                question: "3. ما هما اللونان الأساسيان لشعار وطقم نادي الهلال؟",
+                options: ["الأخضر والأبيض", "الأزرق والأبيض", "الأصفر والأسود", "الأحمر والأبيض"],
+                answer: 1,
+                explanation: "الأزرق والأبيض هما اللونان الأساسيان لنادي الهلال."
+            },
+            {
+                question: "4. في أي عام ميلادي تأسس نادي الهلال السعودي؟",
+                options: ["1957م", "1965م", "1972م", "1980م"],
+                answer: 0,
+                explanation: "تأسس نادي الهلال في الرياض عام 1957م (1377هـ)."
+            },
+            {
+                question: "5. من هو مؤسس نادي الهلال السعودي؟",
+                options: ["عبد الرحمن بن سعيد", "فيصل بن فهد", "سامي الجابر", "يوسف الثنيان"],
+                answer: 0,
+                explanation: "مؤسس نادي الهلال هو الشيخ عبد الرحمن بن سعيد رحمه الله."
+            },
+            {
+                question: "6. كم مرة حقق الهلال بطولة دوري أبطال آسيا؟",
+                options: ["مرتان", "3 مرات", "4 مرات", "مرة واحدة"],
+                answer: 2,
+                explanation: "حقق الهلال لقب دوري أبطال آسيا 4 مرات كأكثر أندية القارة تتويجاً."
+            },
+            {
+                question: "7. أي لاعب هلالي يُعد الهداف التاريخي للنادي عبر العصور؟",
+                options: ["ياسر القحطاني", "سامي الجابر", "سالم الدوسري", "محمد الشلهوب"],
+                answer: 1,
+                explanation: "سامي الجابر هو الهداف التاريخي لنادي الهلال."
+            },
+            {
+                question: "8. أي لاعب يُعد الأكثر تتويجاً بالبطولات في تاريخ نادي الهلال؟",
+                options: ["محمد الشلهوب", "نواف العابد", "سلمان الفرج", "فهد المصيبيح"],
+                answer: 0,
+                explanation: "محمد الشلهوب يُعد الأكثر تحقيقاً للبطولات في تاريخ الهلال."
+            },
+            {
+                question: "9. ما هو الملعب الذي يحتضن عدداً كبيراً من مباريات الهلال في الرياض؟",
+                options: ["المملكة أرينا", "مدينة الملك عبد الله الرياضية", "ملعب الأمير محمد بن فهد", "استاد الجوهرة"],
+                answer: 0,
+                explanation: "المملكة أرينا في الرياض من أبرز الملاعب التي يحتضن فيها الهلال مبارياته."
+            },
+            {
+                question: "10. ما هو المركز الذي حققه الهلال في كأس العالم للأندية عندما وصل للنهائي؟",
+                options: ["المركز الأول", "المركز الثاني (الوصيف)", "المركز الثالث", "المركز الرابع"],
+                answer: 1,
+                explanation: "حقق الهلال المركز الثاني (الوصيف) في كأس العالم للأندية."
+            }
+        ];
+
+        let currentQIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        function renderQuestion() {
+            const q = hilalQuestions[currentQIndex];
+            answered = false;
+
+            document.getElementById('quiz-counter').textContent = `السؤال ${currentQIndex + 1} من ${hilalQuestions.length}`;
+            document.getElementById('quiz-score').textContent = `النتيجة: ${score} / ${hilalQuestions.length}`;
+            document.getElementById('quiz-progress-bar').style.width = `${((currentQIndex + 1) / hilalQuestions.length) * 100}%`;
+            document.getElementById('quiz-question-text').textContent = q.question;
+
+            const optionsBox = document.getElementById('quiz-options-box');
+            optionsBox.innerHTML = '';
+
+            q.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option-btn';
+                btn.textContent = optText;
+                btn.onclick = () => selectOption(idx, btn);
+                optionsBox.appendChild(btn);
+            });
+
+            const feedbackBox = document.getElementById('quiz-feedback-box');
+            feedbackBox.className = 'quiz-feedback';
+            feedbackBox.textContent = '';
+
+            const nextBtn = document.getElementById('next-question-btn');
+            nextBtn.style.display = 'none';
+            nextBtn.textContent = currentQIndex === hilalQuestions.length - 1 ? 'عرض النتيجة النهائية 🏆' : 'السؤال التالي ⬅️';
+        }
+
+        function selectOption(selectedIdx, clickedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const q = hilalQuestions[currentQIndex];
+            const allBtns = document.querySelectorAll('.quiz-option-btn');
+            const feedbackBox = document.getElementById('quiz-feedback-box');
+
+            allBtns.forEach(b => b.disabled = true);
+
+            if (selectedIdx === q.answer) {
+                score++;
+                clickedBtn.classList.add('correct');
+                feedbackBox.className = 'quiz-feedback show is-correct';
+                feedbackBox.textContent = `✅ إجابة صحيحة! ${q.explanation}`;
+            } else {
+                clickedBtn.classList.add('wrong');
+                allBtns[q.answer].classList.add('correct');
+                feedbackBox.className = 'quiz-feedback show is-wrong';
+                feedbackBox.textContent = `❌ إجابة خاطئة! الإجابة الصحيحة هي: (${q.options[q.answer]}) — ${q.explanation}`;
+            }
+
+            document.getElementById('quiz-score').textContent = `النتيجة: ${score} / ${hilalQuestions.length}`;
+            document.getElementById('next-question-btn').style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            if (currentQIndex < hilalQuestions.length) {
+                renderQuestion();
+            } else {
+                showFinalResult();
+            }
+        }
+
+        function showFinalResult() {
+            document.getElementById('quiz-play-area').style.display = 'none';
+            const resultBox = document.getElementById('quiz-result-box');
+            resultBox.style.display = 'block';
+
+            document.getElementById('final-score-text').textContent = `${score} / ${hilalQuestions.length}`;
+
+            let msg = '';
+            if (score >= 9) {
+                msg = 'مذهل! أنت خبير حقيقي في تاريخ وبطولات الزعيم.';
+            } else if (score >= 6) {
+                msg = 'أداء رائع! معلوماتك الهلالية قوية وممتازة.';
+            } else {
+                msg = 'بداية جيدة! أعد المحاولة لرفع رصيدك من المعلومات الهلالية.';
+            }
+            document.getElementById('final-rank-msg').textContent = msg;
+        }
+
+        function restartQuiz() {
+            currentQIndex = 0;
+            score = 0;
+            document.getElementById('quiz-result-box').style.display = 'none';
+            document.getElementById('quiz-play-area').style.display = 'block';
+            renderQuestion();
+        }
+
+        renderQuestion();
+                    
