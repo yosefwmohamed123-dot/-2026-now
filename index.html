@@ -1650,4 +1650,78 @@
 </script>
 
                     
-                            
+       
+import express from "express";
+import OpenAI from "openai";
+
+const app = express();
+const client = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+});
+
+app.use(express.json({ limit: "50kb" }));
+app.use(express.static("public"));
+
+app.post("/api/zaeem", async (req, res) => {
+    try {
+        const messages = req.body.messages;
+
+        if (!Array.isArray(messages) || messages.length === 0 ||
+            messages.length > 30) {
+            return res.status(400).json({
+                error: "المحادثة غير صالحة"
+            });
+        }
+
+        const safeMessages = messages.map(m => {
+            if (!["user", "assistant"].includes(m.role) ||
+                typeof m.content !== "string" ||
+                m.content.length > 4000) {
+                throw new Error("رسالة غير صالحة");
+            }
+            return {
+                role: m.role,
+                content: m.content
+            };
+        });
+
+        const response = await client.responses.create({
+            model: "gpt-5.5",
+            instructions: `
+أنت الزعيم AI، مساعد ذكاء اصطناعي عربي.
+اسمك الزعيم.
+أجب عن أسئلة المستخدم في مختلف المجالات.
+تحدث بلغة واضحة ومفهومة.
+استخدم اللهجة المصرية عند طلبها.
+اهتم بكرة القدم ونادي الهلال السعودي.
+لا تخترع معلومات عندما لا تعرف الإجابة.
+كن مهذباً ودقيقاً وآمناً.
+            `,
+            input: safeMessages
+        });
+
+        res.json({ answer: response.output_text });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: "تعذر الحصول على إجابة حالياً"
+        });
+    }
+});
+
+app.listen(3000, () => {
+    console.log("الزعيم AI يعمل على المنفذ 3000");
+});
+
+Alzaeem/
+│
+├── server.mjs
+├── package.json
+└── public/
+    └── index.html
+
+npm init -y
+npm install express openai
+
+node server.mjs
